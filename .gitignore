@@ -2,3 +2,8 @@
 /build/
 
 /local.properties
+
+/.classpath
+/.project
+/.settings/
+/bin/
