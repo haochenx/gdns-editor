@@ -12,7 +12,7 @@ apply plugin: 'java'
 apply plugin: 'maven-publish'
 
 group = 'name.haochenxie.utils'
-archivesBaseName = 'gcloud-util'
+archivesBaseName = 'gdns-editor'
 version = '1.0-SNAPSHOT'
 
 // In this section you declare where to find the dependencies of your project
@@ -26,7 +26,7 @@ publishing {
   publications {
     plugin(MavenPublication) {
       from components.java
-      artifactId 'gcloud-util'
+      artifactId 'gdns-editor'
     }
   }
 }
