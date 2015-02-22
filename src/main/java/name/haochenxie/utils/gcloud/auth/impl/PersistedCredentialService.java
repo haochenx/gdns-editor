@@ -47,6 +47,18 @@ public class PersistedCredentialService implements ICredentialService {
 
   @Override
   public Credential getCredentialFor(Set<String> scopes) throws IOException {
+    Credential cached = getCachedCredentialFor(scopes);
+
+    if (cached != null) {
+      return cached;
+    } else {
+      Credential credential = authenticate(scopes);
+      return credential;
+    }
+  }
+
+  @Override
+  public Credential authenticate(Set<String> scopes) throws IOException {
     String userid = getSetCanonicalString(scopes);
 
     GoogleAuthorizationCodeFlow flow =
@@ -54,10 +66,9 @@ public class PersistedCredentialService implements ICredentialService {
             transport, jsonFactory, clientSecrets, scopes)
       .setCredentialDataStore(credentialDataStore)
       .build();
-    Credential credential = flow.loadCredential(userid);
-    if (credential == null) {
-      credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize(userid);
-    }
+
+    Credential credential = new AuthorizationCodeInstalledApp(flow, new LocalServerReceiver()).authorize(userid);
+
     return credential;
   }
 
@@ -67,6 +78,28 @@ public class PersistedCredentialService implements ICredentialService {
 
   public File getCredentialStorageFile() {
     return credentialStorageFile;
+  }
+
+  @Override
+  public Credential getCachedCredentialFor(Set<String> scopes) throws IOException {
+    String userid = getSetCanonicalString(scopes);
+
+    GoogleAuthorizationCodeFlow flow =
+        new GoogleAuthorizationCodeFlow.Builder(
+            transport, jsonFactory, clientSecrets, scopes)
+      .setCredentialDataStore(credentialDataStore)
+      .build();
+
+    Credential credential = flow.loadCredential(userid);
+
+    return credential;
+  }
+
+  @Override
+  public void deauthenticate(Set<String> scopes) throws IOException {
+    String userid = getSetCanonicalString(scopes);
+
+    credentialDataStore.delete(userid);
   }
 
 }
