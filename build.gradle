@@ -9,11 +9,14 @@
 
 // Apply the java plugin to add support for Java
 apply plugin: 'java'
+apply plugin: 'application'
 apply plugin: 'maven-publish'
 
 group = 'name.haochenxie.utils'
 archivesBaseName = 'gdns-editor'
 version = '1.0-SNAPSHOT'
+
+mainClassName = 'name.haochenxie.gdnseditor.ui.swing.MainFrame'
 
 // In this section you declare where to find the dependencies of your project
 repositories {
